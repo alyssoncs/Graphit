@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "graph.h"
+#include "graphit.h"
 /*
 int main(int argc, char const *argv[]) {
 	heap *h;

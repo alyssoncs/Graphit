@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <float.h>
-#include "graph.h"
+#include "graphit.h"
 
 #define heap_parent(i) 	(size_t)( ((i)-1)/2 )
 #define heap_right(i) 	(size_t)( (2*(i))+2 )
