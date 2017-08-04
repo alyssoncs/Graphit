@@ -34,7 +34,6 @@ typedef struct
 	double w;
 } vertex;
 
-typedef enum {WHITE, GRAY, BLACK} graphColor;
 
 /* Vertex utilities */
 vertex *create_vertex(size_t u, double w);
