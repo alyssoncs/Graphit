@@ -10,7 +10,7 @@
 
 vertex *create_vertex(size_t u, double w)
 {
-	vertex *v = (vertex*)malloc(sizeof(vertex));
+	vertex *v = (vertex *)malloc(sizeof(vertex));
 
 	if (v)
 	{
@@ -18,8 +18,7 @@ vertex *create_vertex(size_t u, double w)
 		v->w = w;
 		return v;
 	}
-	else
-		return NULL;
+	return NULL;
 }
 void destroy_vertex(vertex *v)
 {
@@ -33,11 +32,11 @@ void destroy_vertex(vertex *v)
  */
 heap *create_heap(size_t N, int (*cmp)(void *, void *))
 {
-	heap *h = (heap*)malloc(sizeof(heap));
+	heap *h = (heap *)malloc(sizeof(heap));
 
 	if (h)
 	{
-		h->arr = (void*)malloc(sizeof(void *) * N);
+		h->arr = (void *)malloc(sizeof(void *) * N);
 		h->cmp = cmp;
 		h->max_size = N;
 		h->size = 0;
@@ -61,9 +60,8 @@ void destroy_heap(heap *h)
 
 int heap_is_empty(heap *h)
 {
-	if (h)
-		if (h->size == 0)
-			return 1;
+	if (h && h->size == 0)
+		return 1;
 	return 0;
 }
 
@@ -150,7 +148,7 @@ int heap_insert(heap *h, void *key)
 
 void sll_insert_first(sllist **l, size_t a)
 {
-	sllist *node = (sllist*)malloc(sizeof(sllist));
+	sllist *node = (sllist *)malloc(sizeof(sllist));
 
 	if (node)
 	{
@@ -162,7 +160,7 @@ void sll_insert_first(sllist **l, size_t a)
 
 void sll_insert_last(sllist **l, size_t a)
 {
-	sllist *node = (sllist*)malloc(sizeof(sllist));
+	sllist *node = (sllist *)malloc(sizeof(sllist));
 
 	if (node)
 	{
@@ -217,34 +215,36 @@ graph *create_graph(size_t V)
 {
 	graph *g = malloc(sizeof(graph));
 
-	if (!g)
-		return NULL;
-
-	g->V = V;
-	g->E = 0;
-	g->weight = NULL;
-	g->adj = (char**)malloc(sizeof(char*) * V);
-	if (g->adj)
+	if (g)
 	{
-		size_t i;
-		for (i = 0; i < V; i++)
+		g->V = V;
+		g->E = 0;
+		g->weight = NULL;
+		g->adj = (char **)malloc(sizeof(char*) * V);
+		if (g->adj)
 		{
-			g->adj[i] = (char*)calloc(V, sizeof(char));
-			if (!g->adj[i])
+			size_t i;
+			for (i = 0; i < V; i++)
+				g->adj[i] = NULL;
+
+			for (i = 0; i < V; i++)
 			{
-				destroy_graph(g);
-				g = NULL;
-				break;
+				g->adj[i] = (char *)calloc(V, sizeof(char));
+				if (!g->adj[i])
+				{
+					destroy_graph(g);
+					g = NULL;
+					break;
+				}
 			}
 		}
-	}
-	else
-	{
-		destroy_graph(g);
-		g = NULL;
+		else
+		{
+			destroy_graph(g);
+			g = NULL;
+		}
 	}
 	return g;
-
 }
 
 graph *create_weighted_graph(size_t V)
@@ -253,13 +253,16 @@ graph *create_weighted_graph(size_t V)
 
 	if (g)
 	{
-		g->weight = (double**)malloc(sizeof(double*) * V);
+		g->weight = (double **)malloc(sizeof(double *) * V);
 		if (g->weight)
 		{
 			size_t i;
 			for (i = 0; i < V; i++)
+				g->weight[i] = NULL;
+
+			for (i = 0; i < V; i++)
 			{
-				g->weight[i] = (double*)calloc(V, sizeof(double));
+				g->weight[i] = (double *)calloc(V, sizeof(double));
 				if (!g->weight[i])
 				{
 					destroy_graph(g);
@@ -277,15 +280,21 @@ graph *create_weighted_graph(size_t V)
 	return g;
 }
 
+
 void destroy_graph(graph *g)
 {
 	if (g)
 	{
-		size_t i;
-		for (i = 0; i < g->V; i++)
+		if (g->adj)
 		{
-			free(g->adj[i]);
-			if (g->weight)
+			size_t i;
+			for (i = 0; i < g->V; i++)
+				free(g->adj[i]);
+		}
+		if (g->weight)
+		{
+			size_t i;
+			for (i = 0; i < g->V; i++)
 				free(g->weight[i]);
 		}
 		free(g->adj);
@@ -309,8 +318,8 @@ void bfs(graph *g, size_t s)
 {
 	if (g && g->V > s)
 	{
-		size_t *distance        = (size_t*)malloc(sizeof(size_t) * g->V);
-		int *visited            = (int*)calloc(g->V, sizeof(int));
+		size_t *distance        = (size_t *)malloc(sizeof(size_t) * g->V);
+		int *visited            = (int *)calloc(g->V, sizeof(int));
 		sllist *queue           = NULL;
 
 		if (visited && distance)
@@ -322,7 +331,7 @@ void bfs(graph *g, size_t s)
 			sll_insert_first(&queue, s);
 
 			sllist *node;
-			while ((node = sll_remove_last(&queue)))
+			while ( (node = sll_remove_last(&queue)) )
 			{
 				i = node->key;
 				for (j = 0; j < g->V; j++)
@@ -336,8 +345,6 @@ void bfs(graph *g, size_t s)
 				}
 				free(node);
 			}
-
-
 		}
 		free(visited);
 		free(distance);
@@ -346,20 +353,18 @@ void bfs(graph *g, size_t s)
 
 static void _dfs_visit(graph *g, size_t s, int visited[])
 {
-	printf("%zu\n", s);
 	visited[s] = 1;
 	size_t i;
 	for (i = 0; i < g->V; i++)
 		if (g->adj[s][i] && !visited[i])
 			_dfs_visit(g, i, visited);
-
 }
 
 void dfs(graph *g, size_t s)
 {
 	if (g)
 	{
-		int *visited = (int*)calloc(g->V, sizeof(int));
+		int *visited = (int *)calloc(g->V, sizeof(int));
 		if (visited)
 			_dfs_visit(g, s, visited);
 
@@ -369,8 +374,8 @@ void dfs(graph *g, size_t s)
 
 static int cmp_edges(const void *arg1, const void *arg2)
 {
-	edge a = *(edge*)arg1;
-	edge b = *(edge*)arg2;
+	edge a = *(edge *)arg1;
+	edge b = *(edge *)arg2;
 
 	if (a.w > b.w)
 		return 1;
@@ -381,8 +386,8 @@ static int cmp_edges(const void *arg1, const void *arg2)
 
 static int cmp_vertex(void *arg1, void *arg2)
 {
-	vertex *a = (vertex*)arg1;
-	vertex *b = (vertex*)arg2;
+	vertex *a = (vertex *)arg1;
+	vertex *b = (vertex *)arg2;
 
 	if (a->w < b->w)
 		return 1;
@@ -391,6 +396,7 @@ static int cmp_vertex(void *arg1, void *arg2)
 
 }
 
+/* needs to deal with the case where out is NULL */
 double kruskal(graph *g, graph **out)
 {
 	size_t i, j;
@@ -398,9 +404,9 @@ double kruskal(graph *g, graph **out)
 
 	if (g && g->weight)
 	{
-		*out = create_weighted_graph(g->V);
-		edge *A = (edge*)malloc(sizeof(edge) * g->E);
-		size_t *set = (size_t*)malloc(sizeof(size_t) * g->E);
+		*out 		= create_weighted_graph(g->V);
+		edge *A 	= (edge *)malloc(sizeof(edge) * g->E);
+		size_t *set 	= (size_t *)malloc(sizeof(size_t) * g->E);
 		if (*out && A && set)
 		{
 			size_t count = 0;
@@ -454,10 +460,10 @@ double prim(graph *g, graph **out)
 	if (g && g->weight)
 	{
 
-		vertex **vertices       = (vertex**)malloc(sizeof(vertex *) * g->V);
-		size_t  *parent         = (size_t*)malloc(sizeof(size_t) * g->V);
-		double  *cost           = (double*)malloc(sizeof(double) * g->V);
-		int     *visited        = (int*)calloc(g->V, sizeof(int));
+		vertex **vertices       = (vertex **)malloc(sizeof(vertex *) * g->V);
+		size_t  *parent         = (size_t *)malloc(sizeof(size_t) * g->V);
+		double  *cost           = (double *)malloc(sizeof(double) * g->V);
+		int     *visited        = (int *)calloc(g->V, sizeof(int));
 		heap    *pq             = create_heap(g->V, cmp_vertex);
 
 		if (visited && pq && cost && parent && vertices)
@@ -470,6 +476,7 @@ double prim(graph *g, graph **out)
 			for (i = 0; i < g->V; i++)
 			{
 				vertices[i] = create_vertex(i, cost[i]);
+				/* THIS */
 				if (!vertices[i])
 					exit(1);
 
@@ -479,7 +486,7 @@ double prim(graph *g, graph **out)
 			{
 				vertex *w_vertex = (vertex *)heap_extract_min(pq);
 				size_t u = w_vertex->u;
-				free(w_vertex);
+				destroy_vertex(w_vertex);
 
 				visited[u] = 1;
 
@@ -526,14 +533,14 @@ double prim(graph *g, graph **out)
 
 double *dijkstra(graph *g, size_t node)
 {
-	double *cost = (double*)malloc(sizeof(double) * g->V);
+	double *cost = (double *)malloc(sizeof(double) * g->V);
 
 	if (g && g->weight)
 	{
 
-		int *visited = (int*)calloc(g->V, sizeof(int));
-		heap *pq = create_heap(g->V, cmp_vertex);
-		vertex *w_vertex = create_vertex(node, 0.0);
+		int *visited 		= (int *)calloc(g->V, sizeof(int));
+		heap *pq 		= create_heap(g->V, cmp_vertex);
+		vertex *w_vertex 	= create_vertex(node, 0.0);
 
 		if (cost && visited && pq && w_vertex)
 		{
@@ -545,9 +552,9 @@ double *dijkstra(graph *g, size_t node)
 			heap_insert(pq, (void *)w_vertex);
 			while (!heap_is_empty(pq))
 			{
-				w_vertex = (vertex*)heap_extract_min(pq);
+				w_vertex = (vertex *)heap_extract_min(pq);
 				size_t u = w_vertex->u;
-				free(w_vertex);
+				destroy_vertex(w_vertex);
 
 				if (visited[u])
 					continue;
@@ -564,22 +571,23 @@ double *dijkstra(graph *g, size_t node)
 							cost[v] = cost[u] + w;
 							w_vertex = create_vertex(v, cost[v]);
 							if (w_vertex)
-								heap_insert(pq, (void*)w_vertex);
+								heap_insert(pq, (void *)w_vertex);
 							else
+								/* THIS */
 								return NULL;
 						}
 					}
 				}
 			}
-			w_vertex = NULL;
 		}
 		else
 		{
-			free(visited);
-			free(w_vertex);
-			destroy_heap(pq);
+			destroy_vertex(w_vertex);
+			free(cost);
 			cost = NULL;
 		}
+		free(visited);
+		destroy_heap(pq);
 	}
 	return cost;
 }
