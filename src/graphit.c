@@ -558,7 +558,6 @@ double *dijkstra(graph *g, size_t node)
 
 	if (g && g->weight)
 	{
-
 		int *visited 		= (int *)calloc(g->V, sizeof(int));
 		heap *pq 		= create_heap(g->V, cmp_vertex);
 		vertex *w_vertex 	= create_vertex(node, 0.0);
@@ -584,18 +583,22 @@ double *dijkstra(graph *g, size_t node)
 				size_t v;
 				for (v = 0; v < g->V; v++)
 				{
-					if (g->adj[u][v])
+					double w = g->weight[u][v];
+					if (g->adj[u][v] && cost[u]+w < cost[v])
 					{
-						double w = g->weight[u][v];
-						if (cost[u] + w < cost[v])
+						cost[v] = cost[u] + w;
+						w_vertex = create_vertex(v, cost[v]);
+						if (w_vertex)
+							heap_insert(pq, (void *)w_vertex);
+						else
 						{
-							cost[v] = cost[u] + w;
-							w_vertex = create_vertex(v, cost[v]);
-							if (w_vertex)
-								heap_insert(pq, (void *)w_vertex);
-							else
-								/* THIS */
-								return NULL;
+							while (!heap_is_empty(pq))
+							{
+								w_vertex = heap_extract_min(pq);
+								destroy_vertex(w_vertex);
+							}
+							free(cost);
+							cost = NULL;
 						}
 					}
 				}
