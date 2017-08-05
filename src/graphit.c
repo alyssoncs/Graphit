@@ -396,7 +396,6 @@ static int cmp_vertex(void *arg1, void *arg2)
 
 }
 
-/* needs to deal with the case where out is NULL */
 double kruskal(graph *g, graph **out)
 {
 	size_t i, j;
@@ -468,12 +467,11 @@ double prim(graph *g, graph **out)
 
 	if (g && g->weight)
 	{
-
-		vertex **vertices       = (vertex **)malloc(sizeof(vertex *) * g->V);
-		size_t  *parent         = (size_t *)malloc(sizeof(size_t) * g->V);
-		double  *cost           = (double *)malloc(sizeof(double) * g->V);
-		int     *visited        = (int *)calloc(g->V, sizeof(int));
-		heap    *pq             = create_heap(g->V, cmp_vertex);
+		vertex **vertices 	= (vertex **)malloc(sizeof(vertex *) * g->V);
+		size_t  *parent		= (size_t *)malloc(sizeof(size_t) * g->V);
+		double  *cost		= (double *)malloc(sizeof(double) * g->V);
+		int     *visited	= (int *)calloc(g->V, sizeof(int));
+		heap    *pq		= create_heap(g->V, cmp_vertex);
 
 		if (visited && pq && cost && parent && vertices)
 		{
@@ -485,15 +483,28 @@ double prim(graph *g, graph **out)
 			for (i = 0; i < g->V; i++)
 			{
 				vertices[i] = create_vertex(i, cost[i]);
-				/* THIS */
 				if (!vertices[i])
-					exit(1);
-
+				{
+					while (!heap_is_empty(pq))
+					{
+						vertex *v
+						v = heap_extract_min(pq);
+						destroy_vertex(v);
+					}
+					/* would it be better to use a goto? */
+					free(cost);
+					free(parent);
+					free(visited);
+					free(vertices);
+					destroy_heap(pq);
+					return sum;
+				}
 				heap_insert(pq, vertices[i]);
 			}
 			while (!heap_is_empty(pq))
 			{
-				vertex *w_vertex = (vertex *)heap_extract_min(pq);
+				vertex *w_vertex
+				w_vertex = (vertex *)heap_extract_min(pq);
 				size_t u = w_vertex->u;
 				destroy_vertex(w_vertex);
 
@@ -502,7 +513,8 @@ double prim(graph *g, graph **out)
 				size_t v;
 				for (v = 0; v < g->V; v++)
 				{
-					if (g->adj[u][v] && g->weight[u][v] < cost[v] && !visited[v])
+					if (g->adj[u][v] && g->weight[u][v] <
+						cost[v] && !visited[v])
 					{
 						cost[v] = g->weight[u][v];
 						vertices[v]->w = cost[v];
