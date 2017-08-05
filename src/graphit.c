@@ -402,12 +402,18 @@ double kruskal(graph *g, graph **out)
 	size_t i, j;
 	double sum = 0;
 
+	if (out)
+	{
+		*out = create_weighted_graph(g->V);
+		if (!*out)
+			return sum;
+	}
+
 	if (g && g->weight)
 	{
-		*out 		= create_weighted_graph(g->V);
 		edge *A 	= (edge *)malloc(sizeof(edge) * g->E);
 		size_t *set 	= (size_t *)malloc(sizeof(size_t) * g->E);
-		if (*out && A && set)
+		if (A && set)
 		{
 			size_t count = 0;
 			for (i = 0; i < g->V; i++)
@@ -436,8 +442,11 @@ double kruskal(graph *g, graph **out)
 				double w = A[i].w;
 				if (dj_set(set, u) != dj_set(set, v))
 				{
-					add_edge(*out, u, v, w);
-					add_edge(*out, v, u, w);
+					if (out)
+					{
+						add_edge(*out, u, v, w);
+						add_edge(*out, v, u, w);
+					}
 					dj_union(set, u, v);
 					sum += w;
 				}
@@ -445,8 +454,8 @@ double kruskal(graph *g, graph **out)
 
 
 		}
-		else
-			free(*out);
+		if (out)
+			destroy_graph(*out);
 		free(A);
 		free(set);
 	}
