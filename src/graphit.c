@@ -146,6 +146,11 @@ int heap_insert(heap *h, void *key)
 	return 0;
 }
 
+sllist *create_sll()
+{
+	return NULL;
+}
+
 void sll_insert_first(sllist **l, size_t a)
 {
 	sllist *node = (sllist *)malloc(sizeof(sllist));
@@ -487,7 +492,7 @@ double prim(graph *g, graph **out)
 				{
 					while (!heap_is_empty(pq))
 					{
-						vertex *v
+						vertex *v;
 						v = heap_extract_min(pq);
 						destroy_vertex(v);
 					}
@@ -503,7 +508,7 @@ double prim(graph *g, graph **out)
 			}
 			while (!heap_is_empty(pq))
 			{
-				vertex *w_vertex
+				vertex *w_vertex;
 				w_vertex = (vertex *)heap_extract_min(pq);
 				size_t u = w_vertex->u;
 				destroy_vertex(w_vertex);
