@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <float.h>
+#include <math.h>
 #include "graphit.h"
 
 #define heap_parent(i) 	(size_t)( ((i)-1)/2 )
@@ -470,7 +470,7 @@ double prim(graph *g, graph **out)
 		{
 			size_t i;
 			for (i = 1; i < g->V; i++)
-				cost[i] = DBL_MAX;
+				cost[i] = INFINITY;
 			cost[0] = 0.0;
 
 			for (i = 0; i < g->V; i++)
@@ -546,7 +546,7 @@ double *dijkstra(graph *g, size_t node)
 		{
 			size_t i;
 			for (i = 0; i < g->V; i++)
-				cost[i] = DBL_MAX;
+				cost[i] = INFINITY;
 			cost[node] = 0.0;
 
 			heap_insert(pq, (void *)w_vertex);
