@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h> /* take this off */
 #include <math.h>
 #include "graphit.h"
 
