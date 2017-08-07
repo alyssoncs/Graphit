@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdio.h> /* take this off */
 #include <math.h>
 #include "graphit.h"
 
@@ -283,6 +283,27 @@ graph *create_weighted_graph(size_t V)
 		}
 	}
 	return g;
+}
+
+size_t n_vertices(graph *g)
+{
+	if (g)
+		return g->V;
+
+	return 0;
+}
+
+size_t n_edges(graph *g)
+{
+	if (g)
+		return g->E;
+
+	return 0;
+}
+
+int is_weighted_graph(graph *g)
+{
+	return (g && g->weight);
 }
 
 

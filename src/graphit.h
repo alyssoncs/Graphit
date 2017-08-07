@@ -65,18 +65,15 @@ void dj_union(size_t *set, size_t s1, size_t s2);
 /* Graph functions */
 graph *create_graph(size_t V);
 graph *create_weighted_graph(size_t V);
-/*
- * size_t graph_vertices(graph *g);
- * size_t graph_edges(graph *g);
- * int is_weighted_graph(graph *g);
- */
+size_t n_vertices(graph *g);
+size_t n_edges(graph *g);
+int is_weighted_graph(graph *g);
 void destroy_graph(graph *g);
 void add_edge(graph *g, size_t a, size_t b, double w);
 void bfs(graph *g, size_t s);
 void dfs(graph *g, size_t s);
 double kruskal(graph *g, graph **out);
 double *dijkstra(graph *g, size_t node);
-
 /* --------------- */
 
 
