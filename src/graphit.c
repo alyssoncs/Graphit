@@ -17,6 +17,7 @@ vertex *create_vertex(size_t u, double w)
 		v->w = w;
 		return v;
 	}
+
 	return NULL;
 }
 void destroy_vertex(vertex *v)
@@ -46,6 +47,7 @@ heap *create_heap(size_t N, int (*cmp)(void *, void *))
 			return NULL;
 		}
 	}
+
 	return h;
 }
 
@@ -57,10 +59,11 @@ void destroy_heap(heap *h)
 	free(h);
 }
 
-int heap_is_empty(heap *h)
+int heap_is_empty(heap *h) /* change that */
 {
 	if (h && h->size == 0)
 		return 1;
+
 	return 0;
 }
 
@@ -108,6 +111,7 @@ void *heap_min(heap *h)
 {
 	if (h)
 		return h->arr[0];
+
 	return NULL;
 }
 
@@ -121,6 +125,7 @@ void *heap_extract_min(heap *h)
 		min_heapify(h);
 		return min;
 	}
+
 	return NULL;
 }
 
@@ -142,6 +147,7 @@ int heap_insert(heap *h, void *key)
 		}
 		return 1;
 	}
+
 	return 0;
 }
 
@@ -182,6 +188,7 @@ sllist *sll_remove_first(sllist **l)
 
 	if (*l)
 		*l = node->next;
+
 	return node;
 }
 
@@ -199,6 +206,7 @@ sllist *sll_remove_last(sllist **l)
 		}
 		l = &(*l)->next;
 	}
+
 	return node;
 }
 
@@ -248,6 +256,7 @@ graph *create_graph(size_t V)
 			g = NULL;
 		}
 	}
+
 	return g;
 }
 
@@ -281,6 +290,7 @@ graph *create_weighted_graph(size_t V)
 			g = NULL;
 		}
 	}
+
 	return g;
 }
 
@@ -406,6 +416,7 @@ static int cmp_edges(const void *arg1, const void *arg2)
 		return 1;
 	if (a.w < b.w)
 		return -1;
+
 	return 0;
 }
 
@@ -483,6 +494,7 @@ double kruskal(graph *g, graph **out)
 		free(A);
 		free(set);
 	}
+
 	return sum;
 }
 
@@ -574,6 +586,7 @@ double prim(graph *g, graph **out)
 		free(vertices);
 		destroy_heap(pq);
 	}
+
 	return sum;
 }
 
@@ -638,5 +651,6 @@ double *dijkstra(graph *g, size_t node)
 		free(visited);
 		destroy_heap(pq);
 	}
+	
 	return cost;
 }
