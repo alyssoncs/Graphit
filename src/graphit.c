@@ -61,10 +61,7 @@ void destroy_heap(heap *h)
 
 int heap_is_empty(heap *h) /* change that */
 {
-	if (h && h->size == 0)
-		return 1;
-
-	return 0;
+	return (h && h->size == 0)
 }
 
 static void _min_heapify_aux(heap *h, size_t i)
@@ -651,6 +648,6 @@ double *dijkstra(graph *g, size_t node)
 		free(visited);
 		destroy_heap(pq);
 	}
-	
+
 	return cost;
 }
