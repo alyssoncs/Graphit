@@ -59,7 +59,7 @@ void destroy_heap(heap *h)
 	free(h);
 }
 
-int heap_is_empty(heap *h) /* change that */
+int heap_is_empty(heap *h)
 {
 	return (h && h->size == 0)
 }
