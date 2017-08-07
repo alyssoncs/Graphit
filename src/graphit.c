@@ -54,7 +54,7 @@ heap *create_heap(size_t N, int (*cmp)(void *, void *))
 void destroy_heap(heap *h)
 {
 	if (h)
-			free(h->arr);
+		free(h->arr);
 
 	free(h);
 }
