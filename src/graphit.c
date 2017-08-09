@@ -458,7 +458,7 @@ double kruskal(graph *g, graph **out)
 	if (g && g->weight)
 	{
 		edge *A 	= malloc(sizeof(edge) * g->E);
-		size_t *set 	= malloc(sizeof(size_t) * g->E);
+		size_t *set 	= create_dj_set(g->E);
 		if (A && set)
 		{
 			size_t count = 0;
@@ -477,9 +477,6 @@ double kruskal(graph *g, graph **out)
 			}
 
 			qsort(A, g->E, sizeof(edge), cmp_edges);
-
-			for (i = 0; i < g->E; i++)
-				set[i] = i;
 
 			for (i = 0; i < g->E; i++)
 			{
