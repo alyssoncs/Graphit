@@ -22,7 +22,7 @@ void print_graph(graph *g)
 int main(int argc, char const *argv[]) {
 	size_t v, e, a, b;
 	double w;
-	graph *out1, *out2;
+	graph *out1 = NULL, *out2 = NULL;
 
 	scanf("%zu\n", &v);
 	scanf("%zu\n", &e);
@@ -39,6 +39,8 @@ int main(int argc, char const *argv[]) {
 
 		double w1 = kruskal(g, &out1);
 		double w2 = prim(g, &out2);
+		//double w1 = kruskal(g, NULL);
+		//double w2 = prim(g, NULL);
 		double *cost = dijkstra(g, 0);
 
 		printf("\n\tkruskal\n");
