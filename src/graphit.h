@@ -74,6 +74,7 @@ void add_edge(graph *g, size_t a, size_t b, double w);
 void bfs(graph *g, size_t s);
 void dfs(graph *g, size_t s);
 double kruskal(graph *g, graph **out);
+double prim(graph *g, graph **out);
 double *dijkstra(graph *g, size_t node);
 /* --------------- */
 
