@@ -58,9 +58,9 @@ sllist *sll_remove_last(sllist **l);
 /* --------------------- */
 
 /* Disjoint Set */
-size_t *create_dj_set(size_t N);
-size_t dj_set(size_t *set, size_t s1);
-void dj_union(size_t *set, size_t s1, size_t s2);
+int *create_dj_set(int N);
+int dj_set(int set[], int s1);
+void dj_union(int set[], int s1, int s2);
 /*--------------*/
 
 /* Graph functions */

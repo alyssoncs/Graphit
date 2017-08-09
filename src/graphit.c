@@ -96,11 +96,7 @@ void heap_update(heap *h)
 {
 	int i;
 	for(i = h->size/2; i >= 0; i--)
-	{
 		_min_heapify_aux(h, i);
-		if (i == 0)
-			break;
-	}
 }
 
 void *heap_min(heap *h)
@@ -206,13 +202,13 @@ sllist *sll_remove_last(sllist **l)
 	return node;
 }
 
-size_t *create_dj_set(size_t N)
+int *create_dj_set(int N)
 {
-	size_t *set = malloc(sizeof(size_t)*N);
+	int *set = malloc(sizeof(int)*N);
 
 	if (set)
 	{
-		size_t i;
+		int i;
 		for (i = 0; i < N; i++)
 			set[i] = i;
 	}
@@ -220,7 +216,7 @@ size_t *create_dj_set(size_t N)
 	return set;
 }
 
-size_t dj_set(size_t set[], size_t s1)
+int dj_set(int set[], int s1)
 {
 	if (set[s1] == s1)
 		return s1;
@@ -228,7 +224,7 @@ size_t dj_set(size_t set[], size_t s1)
 		return set[s1] = dj_set(set, set[s1]);
 }
 
-void dj_union(size_t set[], size_t s1, size_t s2)
+void dj_union(int set[], int s1, int s2)
 {
 	set[dj_set(set, s1)] = dj_set(set, s2);
 }
@@ -456,7 +452,7 @@ double kruskal(graph *g, graph **out)
 	if (g && g->weight)
 	{
 		edge *A 	= malloc(sizeof(edge) * g->E);
-		size_t *set 	= create_dj_set(g->E);
+		int *set 	= create_dj_set(g->E);
 		if (A && set)
 		{
 			size_t count = 0;
