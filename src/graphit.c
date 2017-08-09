@@ -152,7 +152,7 @@ sllist *create_sll()
 	return NULL;
 }
 
-void sll_insert_first(sllist **l, size_t a)
+void sll_insert_first(sllist **l, int a)
 {
 	sllist *node = malloc(sizeof(sllist));
 
@@ -164,7 +164,7 @@ void sll_insert_first(sllist **l, size_t a)
 	}
 }
 
-void sll_insert_last(sllist **l, size_t a)
+void sll_insert_last(sllist **l, int a)
 {
 	sllist *node = malloc(sizeof(sllist));
 

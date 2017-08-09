@@ -11,7 +11,7 @@ typedef struct
 
 typedef struct _sllist
 {
-	size_t key;
+	int key;
 	struct _sllist *next;
 } sllist;
 
@@ -51,8 +51,8 @@ int heap_insert(heap *h, void *key);
 
 /* Linked list functions */
 sllist *create_sll();
-void sll_insert_first(sllist **l, size_t a);
-void sll_insert_last(sllist **l, size_t a);
+void sll_insert_first(sllist **l, int a);
+void sll_insert_last(sllist **l, int a);
 sllist *sll_remove_first(sllist **l);
 sllist *sll_remove_last(sllist **l);
 /* --------------------- */
