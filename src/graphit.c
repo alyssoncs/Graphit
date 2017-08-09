@@ -495,8 +495,6 @@ double kruskal(graph *g, graph **out)
 
 
 		}
-		if (out)
-			destroy_graph(*out);
 		free(A);
 		free(set);
 	}

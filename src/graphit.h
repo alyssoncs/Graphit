@@ -68,6 +68,7 @@ graph *create_graph(size_t V);
 graph *create_weighted_graph(size_t V);
 size_t n_vertices(graph *g);
 size_t n_edges(graph *g);
+/* lacks a function to know if there is a edge between two vertices */
 int is_weighted_graph(graph *g);
 void destroy_graph(graph *g);
 void add_edge(graph *g, size_t a, size_t b, double w);
