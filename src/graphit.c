@@ -221,7 +221,7 @@ size_t *create_dj_set(size_t N)
 	return set;
 }
 
-size_t dj_set(size_t *set, size_t s1)
+size_t dj_set(size_t set[], size_t s1)
 {
 	if (set[s1] == s1)
 		return s1;
@@ -229,7 +229,7 @@ size_t dj_set(size_t *set, size_t s1)
 		return set[s1] = dj_set(set, set[s1]);
 }
 
-void dj_union(size_t *set, size_t s1, size_t s2)
+void dj_union(size_t set[], size_t s1, size_t s2)
 {
 	set[dj_set(set, s1)] = dj_set(set, s2);
 }
