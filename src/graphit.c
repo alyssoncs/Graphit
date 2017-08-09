@@ -29,7 +29,7 @@ void destroy_vertex(vertex *v)
  * Creates a heap with size N
  * and with comparison function cmp
  */
-heap *create_heap(size_t N, int (*cmp)(void *, void *))
+heap *create_heap(int N, int (*cmp)(void *, void *))
 {
 	heap *h = malloc(sizeof(heap));
 
@@ -63,11 +63,11 @@ int heap_is_empty(heap *h)
 	return (h && h->size == 0);
 }
 
-static void _min_heapify_aux(heap *h, size_t i)
+static void _min_heapify_aux(heap *h, int i)
 {
-	size_t min;
-	size_t l = heap_left(i);
-	size_t r = heap_right(i);
+	int min;
+	int l = heap_left(i);
+	int r = heap_right(i);
 
 	if (l < h->size && h->cmp(h->arr[l], h->arr[i]))
 		min = l;
@@ -94,7 +94,7 @@ void min_heapify(heap *h)
 
 void heap_update(heap *h)
 {
-	size_t i;
+	int i;
 	for(i = h->size/2; i >= 0; i--)
 	{
 		_min_heapify_aux(h, i);
@@ -132,7 +132,7 @@ int heap_insert(heap *h, void *key)
 		h->size++;
 		h->arr[h->size - 1] = key;
 
-		size_t i = h->size - 1;
+		int i = h->size - 1;
 		while (i > 0 && h->cmp(h->arr[i], h->arr[heap_parent(i)]))
 		{
 			void *tmp               = h->arr[heap_parent(i)];

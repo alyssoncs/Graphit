@@ -3,8 +3,8 @@
 
 typedef struct
 {
-	size_t size;
-	size_t max_size;
+	int size;
+	int max_size;
 	void **arr;
 	int (*cmp)(void *, void *);
 } heap;
@@ -40,7 +40,7 @@ vertex *create_vertex(size_t u, double w);
 void destroy_vertex(vertex *v);
 /* ---------------- */
 /* Binary Heap functions */
-heap *create_heap(size_t N, int (*cmp)(void *, void *));
+heap *create_heap(int N, int (*cmp)(void *, void *));
 void destroy_heap(heap *h);
 int heap_is_empty(heap *h);
 void min_heapify(heap *h);
