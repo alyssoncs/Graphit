@@ -6,7 +6,6 @@
 #define heap_right(i) 	(size_t)( (2*(i))+2 )
 #define heap_left(i) 	(size_t)( (2*(i))+1 )
 
-
 vertex *create_vertex(size_t u, double w)
 {
 	vertex *v = malloc(sizeof(vertex));
@@ -20,11 +19,11 @@ vertex *create_vertex(size_t u, double w)
 
 	return NULL;
 }
+
 void destroy_vertex(vertex *v)
 {
 	free(v);
 }
-
 
 /*
  * Creates a heap with size N
@@ -325,7 +324,6 @@ int is_weighted_graph(graph *g)
 {
 	return (g && g->weight);
 }
-
 
 void destroy_graph(graph *g)
 {
