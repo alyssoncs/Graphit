@@ -58,6 +58,7 @@ sllist *sll_remove_last(sllist **l);
 /* --------------------- */
 
 /* Disjoint Set */
+size_t *create_dj_set(size_t N);
 size_t dj_set(size_t *set, size_t s1);
 void dj_union(size_t *set, size_t s1, size_t s2);
 /*--------------*/

@@ -207,6 +207,20 @@ sllist *sll_remove_last(sllist **l)
 	return node;
 }
 
+size_t *create_dj_set(size_t N)
+{
+	size_t *set = malloc(sizeof(size_t)*N);
+
+	if (set)
+	{
+		size_t i;
+		for (i = 0; i < N; i++)
+			set[i] = i;
+	}
+
+	return set;
+}
+
 size_t dj_set(size_t *set, size_t s1)
 {
 	if (set[s1] == s1)
