@@ -2,11 +2,11 @@
 #include <math.h>
 #include "graphit.h"
 
-#define heap_parent(i) 	(size_t)( ((i)-1)/2 )
-#define heap_right(i) 	(size_t)( (2*(i))+2 )
-#define heap_left(i) 	(size_t)( (2*(i))+1 )
+#define heap_parent(i) 	(((i)-1)/2)
+#define heap_right(i) 	((2*(i))+2)
+#define heap_left(i) 	((2*(i))+1)
 
-vertex *create_vertex(size_t u, double w)
+vertex *create_vertex(int u, double w)
 {
 	vertex *v = malloc(sizeof(vertex));
 
@@ -29,7 +29,7 @@ void destroy_vertex(vertex *v)
  * Creates a heap with size N
  * and with comparison function cmp
  */
-heap *create_heap(size_t N, int (*cmp)(void *, void *))
+heap *create_heap(int N, int (*cmp)(void *, void *))
 {
 	heap *h = malloc(sizeof(heap));
 
@@ -63,11 +63,11 @@ int heap_is_empty(heap *h)
 	return (h && h->size == 0);
 }
 
-static void _min_heapify_aux(heap *h, size_t i)
+static void _min_heapify_aux(heap *h, int i)
 {
-	size_t min;
-	size_t l = heap_left(i);
-	size_t r = heap_right(i);
+	int min;
+	int l = heap_left(i);
+	int r = heap_right(i);
 
 	if (l < h->size && h->cmp(h->arr[l], h->arr[i]))
 		min = l;
@@ -94,13 +94,9 @@ void min_heapify(heap *h)
 
 void heap_update(heap *h)
 {
-	size_t i;
+	int i;
 	for(i = h->size/2; i >= 0; i--)
-	{
 		_min_heapify_aux(h, i);
-		if (i == 0)
-			break;
-	}
 }
 
 void *heap_min(heap *h)
@@ -132,7 +128,7 @@ int heap_insert(heap *h, void *key)
 		h->size++;
 		h->arr[h->size - 1] = key;
 
-		size_t i = h->size - 1;
+		int i = h->size - 1;
 		while (i > 0 && h->cmp(h->arr[i], h->arr[heap_parent(i)]))
 		{
 			void *tmp               = h->arr[heap_parent(i)];
@@ -152,7 +148,7 @@ sllist *create_sll()
 	return NULL;
 }
 
-void sll_insert_first(sllist **l, size_t a)
+void sll_insert_first(sllist **l, int a)
 {
 	sllist *node = malloc(sizeof(sllist));
 
@@ -164,7 +160,7 @@ void sll_insert_first(sllist **l, size_t a)
 	}
 }
 
-void sll_insert_last(sllist **l, size_t a)
+void sll_insert_last(sllist **l, int a)
 {
 	sllist *node = malloc(sizeof(sllist));
 
@@ -206,13 +202,13 @@ sllist *sll_remove_last(sllist **l)
 	return node;
 }
 
-size_t *create_dj_set(size_t N)
+int *create_dj_set(int N)
 {
-	size_t *set = malloc(sizeof(size_t)*N);
+	int *set = malloc(sizeof(int)*N);
 
 	if (set)
 	{
-		size_t i;
+		int i;
 		for (i = 0; i < N; i++)
 			set[i] = i;
 	}
@@ -220,7 +216,7 @@ size_t *create_dj_set(size_t N)
 	return set;
 }
 
-size_t dj_set(size_t set[], size_t s1)
+int dj_set(int set[], int s1)
 {
 	if (set[s1] == s1)
 		return s1;
@@ -228,12 +224,12 @@ size_t dj_set(size_t set[], size_t s1)
 		return set[s1] = dj_set(set, set[s1]);
 }
 
-void dj_union(size_t set[], size_t s1, size_t s2)
+void dj_union(int set[], int s1, int s2)
 {
 	set[dj_set(set, s1)] = dj_set(set, s2);
 }
 
-graph *create_graph(size_t V)
+graph *create_graph(int V)
 {
 	graph *g = malloc(sizeof(graph));
 
@@ -245,7 +241,7 @@ graph *create_graph(size_t V)
 		g->adj = malloc(sizeof(char *) * V);
 		if (g->adj)
 		{
-			size_t i;
+			int i;
 			for (i = 0; i < V; i++)
 				g->adj[i] = NULL;
 
@@ -270,7 +266,7 @@ graph *create_graph(size_t V)
 	return g;
 }
 
-graph *create_weighted_graph(size_t V)
+graph *create_weighted_graph(int V)
 {
 	graph *g = create_graph(V);
 
@@ -279,7 +275,7 @@ graph *create_weighted_graph(size_t V)
 		g->weight = malloc(sizeof(double *) * V);
 		if (g->weight)
 		{
-			size_t i;
+			int i;
 			for (i = 0; i < V; i++)
 				g->weight[i] = NULL;
 
@@ -304,7 +300,7 @@ graph *create_weighted_graph(size_t V)
 	return g;
 }
 
-size_t n_vertices(graph *g)
+int n_vertices(graph *g)
 {
 	if (g)
 		return g->V;
@@ -312,7 +308,7 @@ size_t n_vertices(graph *g)
 	return 0;
 }
 
-size_t n_edges(graph *g)
+int n_edges(graph *g)
 {
 	if (g)
 		return g->E;
@@ -331,13 +327,13 @@ void destroy_graph(graph *g)
 	{
 		if (g->adj)
 		{
-			size_t i;
+			int i;
 			for (i = 0; i < g->V; i++)
 				free(g->adj[i]);
 		}
 		if (g->weight)
 		{
-			size_t i;
+			int i;
 			for (i = 0; i < g->V; i++)
 				free(g->weight[i]);
 		}
@@ -347,7 +343,7 @@ void destroy_graph(graph *g)
 	}
 }
 
-void add_edge(graph *g, size_t a, size_t b, double w)
+void add_edge(graph *g, int a, int b, double w)
 {
 	if (g)
 	{
@@ -358,24 +354,24 @@ void add_edge(graph *g, size_t a, size_t b, double w)
 	}
 }
 
-void bfs(graph *g, size_t s)
+void bfs(graph *g, int s)
 {
 	if (g && g->V > s)
 	{
-		size_t *distance 	= malloc(sizeof(size_t) * g->V);
+		int *distance 		= malloc(sizeof(int) * g->V);
 		int *visited 		= calloc(g->V, sizeof(int));
 		sllist *queue 		= NULL;
 
 		if (visited && distance)
 		{
-			size_t i, j;
+			int i, j;
 			visited[s] = 1;
 			distance[s] = 0;
 
 			sll_insert_first(&queue, s);
 
 			sllist *node;
-			while ( (node = sll_remove_last(&queue)) )
+			while ((node = sll_remove_last(&queue)))
 			{
 				i = node->key;
 				for (j = 0; j < g->V; j++)
@@ -395,16 +391,16 @@ void bfs(graph *g, size_t s)
 	}
 }
 
-static void _dfs_visit(graph *g, size_t s, int visited[])
+static void _dfs_visit(graph *g, int s, int visited[])
 {
 	visited[s] = 1;
-	size_t i;
+	int i;
 	for (i = 0; i < g->V; i++)
 		if (g->adj[s][i] && !visited[i])
 			_dfs_visit(g, i, visited);
 }
 
-void dfs(graph *g, size_t s)
+void dfs(graph *g, int s)
 {
 	if (g)
 	{
@@ -443,7 +439,7 @@ static int cmp_vertex(void *arg1, void *arg2)
 
 double kruskal(graph *g, graph **out)
 {
-	size_t i, j;
+	int i, j;
 	double sum = 0;
 
 	if (out)
@@ -456,10 +452,10 @@ double kruskal(graph *g, graph **out)
 	if (g && g->weight)
 	{
 		edge *A 	= malloc(sizeof(edge) * g->E);
-		size_t *set 	= create_dj_set(g->E);
+		int *set 	= create_dj_set(g->E);
 		if (A && set)
 		{
-			size_t count = 0;
+			int count = 0;
 			for (i = 0; i < g->V; i++)
 			{
 				for (j = 0; j < g->V; j++)
@@ -478,8 +474,8 @@ double kruskal(graph *g, graph **out)
 
 			for (i = 0; i < g->E; i++)
 			{
-				size_t u = A[i].u;
-				size_t v = A[i].v;
+				int u = A[i].u;
+				int v = A[i].v;
 				double w = A[i].w;
 				if (dj_set(set, u) != dj_set(set, v))
 				{
@@ -495,8 +491,6 @@ double kruskal(graph *g, graph **out)
 
 
 		}
-		if (out)
-			destroy_graph(*out);
 		free(A);
 		free(set);
 	}
@@ -511,14 +505,14 @@ double prim(graph *g, graph **out)
 	if (g && g->weight)
 	{
 		vertex **vertices 	= malloc(sizeof(vertex *) * g->V);
-		size_t  *parent		= malloc(sizeof(size_t) * g->V);
+		int  *parent		= malloc(sizeof(int) * g->V);
 		double  *cost		= malloc(sizeof(double) * g->V);
 		int     *visited	= calloc(g->V, sizeof(int));
 		heap    *pq		= create_heap(g->V, cmp_vertex);
 
 		if (visited && pq && cost && parent && vertices)
 		{
-			size_t i;
+			int i;
 			for (i = 1; i < g->V; i++)
 				cost[i] = INFINITY;
 			cost[0] = 0.0;
@@ -548,12 +542,12 @@ double prim(graph *g, graph **out)
 			{
 				vertex *w_vertex;
 				w_vertex = (vertex *)heap_extract_min(pq);
-				size_t u = w_vertex->u;
+				int u = w_vertex->u;
 				destroy_vertex(w_vertex);
 
 				visited[u] = 1;
 
-				size_t v;
+				int v;
 				for (v = 0; v < g->V; v++)
 				{
 					if (g->adj[u][v] && g->weight[u][v] <
@@ -576,7 +570,7 @@ double prim(graph *g, graph **out)
 				*out = create_weighted_graph(g->V);
 				if (*out)
 				{
-					size_t u, v;
+					int u, v;
 					for (u = 1; u < g->V; u++)
 					{
 						v = parent[u];
@@ -596,7 +590,7 @@ double prim(graph *g, graph **out)
 	return sum;
 }
 
-double *dijkstra(graph *g, size_t node)
+double *dijkstra(graph *g, int node)
 {
 	double *cost = malloc(sizeof(double) * g->V);
 
@@ -608,7 +602,7 @@ double *dijkstra(graph *g, size_t node)
 
 		if (cost && visited && pq && w_vertex)
 		{
-			size_t i;
+			int i;
 			for (i = 0; i < g->V; i++)
 				cost[i] = INFINITY;
 			cost[node] = 0.0;
@@ -617,14 +611,14 @@ double *dijkstra(graph *g, size_t node)
 			while (!heap_is_empty(pq))
 			{
 				w_vertex = (vertex *)heap_extract_min(pq);
-				size_t u = w_vertex->u;
+				int u = w_vertex->u;
 				destroy_vertex(w_vertex);
 
 				if (visited[u])
 					continue;
 				visited[u] = 1;
 
-				size_t v;
+				int v;
 				for (v = 0; v < g->V; v++)
 				{
 					double w = g->weight[u][v];
