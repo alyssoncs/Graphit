@@ -316,6 +316,14 @@ int n_edges(graph *g)
 	return 0;
 }
 
+int is_edge(graph *g, int u, int v)
+{
+	if (g)
+		return g->adj[u][v];
+
+	return 0;
+}
+
 int is_weighted_graph(graph *g)
 {
 	return (g && g->weight);
