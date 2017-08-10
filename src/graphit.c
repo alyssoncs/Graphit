@@ -25,11 +25,19 @@ void destroy_vertex(vertex *v)
 	free(v);
 }
 
+static int cmp_vertex(const void *arg1, const void *arg2)
+{
+	const vertex *a = (const vertex *)arg1;
+	const vertex *b = (const vertex *)arg2;
+
+	return (a->w < b->w);
+}
+
 /*
  * Creates a heap with size N
  * and with comparison function cmp
  */
-heap *create_heap(int N, int (*cmp)(void *, void *))
+heap *create_heap(int N, int (*cmp)(const void *, const void *))
 {
 	heap *h = malloc(sizeof(heap));
 
@@ -143,7 +151,7 @@ int heap_insert(heap *h, void *key)
 	return 0;
 }
 
-sllist *create_sll()
+sllist *sll_init()
 {
 	return NULL;
 }
@@ -300,6 +308,11 @@ graph *create_weighted_graph(int V)
 	return g;
 }
 
+int is_weighted_graph(graph *g)
+{
+	return (g && g->weight);
+}
+
 int n_vertices(graph *g)
 {
 	if (g)
@@ -324,9 +337,23 @@ int is_edge(graph *g, int u, int v)
 	return 0;
 }
 
-int is_weighted_graph(graph *g)
+double edge_weight(graph *g, int u, int v)
 {
-	return (g && g->weight);
+	if (is_weighted_graph(g))
+		return g->weight[u][v];
+
+	return 0.0;
+}
+
+void add_edge(graph *g, int a, int b, double w)
+{
+	if (g)
+	{
+		g->adj[a][b] = 1;
+		g->E++;
+		if (is_weighted_graph(g))
+			g->weight[a][b] = w;
+	}
 }
 
 void destroy_graph(graph *g)
@@ -351,16 +378,6 @@ void destroy_graph(graph *g)
 	}
 }
 
-void add_edge(graph *g, int a, int b, double w)
-{
-	if (g)
-	{
-		g->adj[a][b] = 1;
-		g->E++;
-		if (is_weighted_graph(g))
-			g->weight[a][b] = w;
-	}
-}
 
 void bfs(graph *g, int s)
 {
@@ -368,7 +385,7 @@ void bfs(graph *g, int s)
 	{
 		int *distance 		= malloc(sizeof(int) * g->V);
 		int *visited 		= calloc(g->V, sizeof(int));
-		sllist *queue 		= NULL;
+		sllist *queue 		= sll_init();
 
 		if (visited && distance)
 		{
@@ -422,27 +439,15 @@ void dfs(graph *g, int s)
 
 static int cmp_edges(const void *arg1, const void *arg2)
 {
-	edge a = *(edge *)arg1;
-	edge b = *(edge *)arg2;
+	const edge *a = (const edge *)arg1;
+	const edge *b = (const edge *)arg2;
 
-	if (a.w > b.w)
+	if (a->w > b->w)
 		return 1;
-	if (a.w < b.w)
+	if (a->w < b->w)
 		return -1;
 
 	return 0;
-}
-
-static int cmp_vertex(void *arg1, void *arg2)
-{
-	vertex *a = (vertex *)arg1;
-	vertex *b = (vertex *)arg2;
-
-	if (a->w < b->w)
-		return 1;
-	else
-		return 0;
-
 }
 
 double kruskal(graph *g, graph **out)
@@ -472,7 +477,7 @@ double kruskal(graph *g, graph **out)
 					{
 						A[count].u = i;
 						A[count].v = j;
-						A[count].w = g->weight[i][j];
+						A[count].w = edge_weight(g, i, j);
 						count++;
 					}
 				}
@@ -513,8 +518,8 @@ double prim(graph *g, graph **out)
 	if (is_weighted_graph(g))
 	{
 		vertex **vertices 	= malloc(sizeof(vertex *) * g->V);
-		int *parent		= malloc(sizeof(int) * g->V);
 		double *cost		= malloc(sizeof(double) * g->V);
+		int *parent		= malloc(sizeof(int) * g->V);
 		int *visited 		= calloc(g->V, sizeof(int));
 		heap *pq		= create_heap(g->V, cmp_vertex);
 
@@ -558,10 +563,10 @@ double prim(graph *g, graph **out)
 				int v;
 				for (v = 0; v < g->V; v++)
 				{
-					if (is_edge(g, u, v) && g->weight[u][v] <
+					if (is_edge(g, u, v) && edge_weight(g, u, v) <
 						cost[v] && !visited[v])
 					{
-						cost[v] = g->weight[u][v];
+						cost[v] = edge_weight(g, u, v);
 						vertices[v]->w = cost[v];
 						parent[v] = u;
 
@@ -629,7 +634,7 @@ double *dijkstra(graph *g, int node)
 				int v;
 				for (v = 0; v < g->V; v++)
 				{
-					double w = g->weight[u][v];
+					double w = edge_weight(g, u, v);
 					if (is_edge(g, u, v) && cost[u]+w < cost[v])
 					{
 						cost[v] = cost[u] + w;
