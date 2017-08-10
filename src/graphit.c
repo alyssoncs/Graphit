@@ -32,6 +32,9 @@ typedef struct _sllist
 	struct _sllist *next;
 } sllist;
 
+/*
+ * used to sort an array of edges with qsort()
+ */
 static int cmp_edges(const void *arg1, const void *arg2)
 {
 	const edge *a = (const edge *)arg1;
@@ -64,6 +67,9 @@ static void destroy_vertex(vertex *v)
 	free(v);
 }
 
+/*
+ * used to compare vertices saved in a heap structure
+ */
 static int cmp_vertex(const void *arg1, const void *arg2)
 {
 	const vertex *a = (const vertex *)arg1;
@@ -83,7 +89,7 @@ static void destroy_heap(heap *h)
 
 /*
 * Creates a heap with size N
-* and with comparison function cmp
+* with comparison function cmp
 */
 static heap *create_heap(int N, int (*cmp)(const void *, const void *))
 {
@@ -134,12 +140,19 @@ static void _min_heapify_aux(heap *h, int i)
 	}
 }
 
+/*
+ * restores min heap property
+ */
 static void min_heapify(heap *h)
 {
 	if (h)
 		_min_heapify_aux(h, 0);
 }
 
+/*
+ * restores min heap property if an
+ * element's key was changed
+ */
 static void heap_update(heap *h)
 {
 	int i;
@@ -264,6 +277,9 @@ static int *create_dj_set(int N)
 	return set;
 }
 
+/*
+ * returns the set of element s1
+ */
 static int dj_set(int set[], int s1)
 {
 	if (set[s1] == s1)
@@ -353,6 +369,9 @@ int is_weighted_graph(graph *g)
 	return (g && g->weight);
 }
 
+/*
+ * returns the number of vertices in the graph g
+ */
 int n_vertices(graph *g)
 {
 	if (g)
@@ -361,6 +380,9 @@ int n_vertices(graph *g)
 	return 0;
 }
 
+/*
+ * returns the number of edges in the graph g
+ */
 int n_edges(graph *g)
 {
 	if (g)
@@ -369,6 +391,10 @@ int n_edges(graph *g)
 	return 0;
 }
 
+/*
+ * returns a non-zero if u and v are adjacent vertices,
+ * zero otherwise
+ */
 int is_edge(graph *g, int u, int v)
 {
 	if (g)
@@ -377,6 +403,9 @@ int is_edge(graph *g, int u, int v)
 	return 0;
 }
 
+/*
+ * returns the weight of the edge (u, v)
+ */
 double edge_weight(graph *g, int u, int v)
 {
 	if (is_weighted_graph(g))
@@ -385,6 +414,10 @@ double edge_weight(graph *g, int u, int v)
 	return 0.0;
 }
 
+/*
+ * adds an edge between vertices a and b
+ * if g is a weighted graph, adds a weight w to this new edge
+ */
 void add_edge(graph *g, int a, int b, double w)
 {
 	if (g)
@@ -477,6 +510,11 @@ void dfs(graph *g, int s)
 	}
 }
 
+/*
+ * returns the weight of the minimum-spanning-tree using kruskal's algorithm,
+ * if out is an address of a graph writes the MST on it,
+ * if out is NULL, does nothing
+ */
 double kruskal(graph *g, graph **out)
 {
 	int i, j;
@@ -538,6 +576,9 @@ double kruskal(graph *g, graph **out)
 	return sum;
 }
 
+/*
+ * same as kruskal(), but using prim's algorithm
+ */
 double prim(graph *g, graph **out)
 {
 	double sum = 0.0;
@@ -630,6 +671,10 @@ double prim(graph *g, graph **out)
 	return sum;
 }
 
+/*
+ * find the shortest path between node and all vertices
+ * and return those values as an double array with size g->V
+ */
 double *dijkstra(graph *g, int node)
 {
 	double *cost = malloc(sizeof(double) * g->V);
