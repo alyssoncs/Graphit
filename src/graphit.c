@@ -357,7 +357,7 @@ void add_edge(graph *g, int a, int b, double w)
 	{
 		g->adj[a][b] = 1;
 		g->E++;
-		if (g->weight)
+		if (is_weighted_graph(g))
 			g->weight[a][b] = w;
 	}
 }
@@ -384,7 +384,7 @@ void bfs(graph *g, int s)
 				i = node->key;
 				for (j = 0; j < g->V; j++)
 				{
-					if (g->adj[i][j] && !visited[j])
+					if (is_edge(g, i, j) && !visited[j])
 					{
 						visited[j] = 1;
 						distance[j] = distance[i] + 1;
@@ -404,7 +404,7 @@ static void _dfs_visit(graph *g, int s, int visited[])
 	visited[s] = 1;
 	int i;
 	for (i = 0; i < g->V; i++)
-		if (g->adj[s][i] && !visited[i])
+		if (is_edge(g, s, i) && !visited[i])
 			_dfs_visit(g, i, visited);
 }
 
@@ -457,7 +457,7 @@ double kruskal(graph *g, graph **out)
 			return sum;
 	}
 
-	if (g && g->weight)
+	if (is_weighted_graph(g))
 	{
 		edge *A 	= malloc(sizeof(edge) * g->E);
 		int *set 	= create_dj_set(g->E);
@@ -468,7 +468,7 @@ double kruskal(graph *g, graph **out)
 			{
 				for (j = 0; j < g->V; j++)
 				{
-					if (g->adj[i][j])
+					if (is_edge(g, i, j))
 					{
 						A[count].u = i;
 						A[count].v = j;
