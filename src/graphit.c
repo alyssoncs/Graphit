@@ -510,7 +510,7 @@ double prim(graph *g, graph **out)
 {
 	double sum = 0.0;
 
-	if (g && g->weight)
+	if (is_weighted_graph(g))
 	{
 		vertex **vertices 	= malloc(sizeof(vertex *) * g->V);
 		int  *parent		= malloc(sizeof(int) * g->V);
