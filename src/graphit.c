@@ -513,10 +513,10 @@ double prim(graph *g, graph **out)
 	if (is_weighted_graph(g))
 	{
 		vertex **vertices 	= malloc(sizeof(vertex *) * g->V);
-		int  *parent		= malloc(sizeof(int) * g->V);
-		double  *cost		= malloc(sizeof(double) * g->V);
-		int     *visited	= calloc(g->V, sizeof(int));
-		heap    *pq		= create_heap(g->V, cmp_vertex);
+		int *parent		= malloc(sizeof(int) * g->V);
+		double *cost		= malloc(sizeof(double) * g->V);
+		int *visited 		= calloc(g->V, sizeof(int));
+		heap *pq		= create_heap(g->V, cmp_vertex);
 
 		if (visited && pq && cost && parent && vertices)
 		{
@@ -558,7 +558,7 @@ double prim(graph *g, graph **out)
 				int v;
 				for (v = 0; v < g->V; v++)
 				{
-					if (g->adj[u][v] && g->weight[u][v] <
+					if (is_edge(g, u, v) && g->weight[u][v] <
 						cost[v] && !visited[v])
 					{
 						cost[v] = g->weight[u][v];
@@ -602,7 +602,7 @@ double *dijkstra(graph *g, int node)
 {
 	double *cost = malloc(sizeof(double) * g->V);
 
-	if (g && g->weight)
+	if (is_weighted_graph(g))
 	{
 		int *visited 		= calloc(g->V, sizeof(int));
 		heap *pq 		= create_heap(g->V, cmp_vertex);
@@ -630,7 +630,7 @@ double *dijkstra(graph *g, int node)
 				for (v = 0; v < g->V; v++)
 				{
 					double w = g->weight[u][v];
-					if (g->adj[u][v] && cost[u]+w < cost[v])
+					if (is_edge(g, u, v) && cost[u]+w < cost[v])
 					{
 						cost[v] = cost[u] + w;
 						w_vertex = create_vertex(v, cost[v]);
