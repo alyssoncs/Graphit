@@ -6,7 +6,46 @@
 #define heap_right(i) 	((2*(i))+2)
 #define heap_left(i) 	((2*(i))+1)
 
-vertex *create_vertex(int u, double w)
+typedef struct
+{
+	int u, v;
+	double w;
+} edge;
+
+typedef struct
+{
+	int u;
+	double w;
+} vertex;
+
+typedef struct
+{
+	int size;
+	int max_size;
+	void **arr;
+	int (*cmp)(const void *, const void *);
+} heap;
+
+typedef struct _sllist
+{
+	int key;
+	struct _sllist *next;
+} sllist;
+
+static int cmp_edges(const void *arg1, const void *arg2)
+{
+	const edge *a = (const edge *)arg1;
+	const edge *b = (const edge *)arg2;
+
+	if (a->w > b->w)
+		return 1;
+	if (a->w < b->w)
+		return -1;
+
+	return 0;
+}
+
+static vertex *create_vertex(int u, double w)
 {
 	vertex *v = malloc(sizeof(vertex));
 
@@ -20,7 +59,7 @@ vertex *create_vertex(int u, double w)
 	return NULL;
 }
 
-void destroy_vertex(vertex *v)
+static void destroy_vertex(vertex *v)
 {
 	free(v);
 }
@@ -33,11 +72,20 @@ static int cmp_vertex(const void *arg1, const void *arg2)
 	return (a->w < b->w);
 }
 
+
+static void destroy_heap(heap *h)
+{
+	if (h)
+		free(h->arr);
+
+	free(h);
+}
+
 /*
- * Creates a heap with size N
- * and with comparison function cmp
- */
-heap *create_heap(int N, int (*cmp)(const void *, const void *))
+* Creates a heap with size N
+* and with comparison function cmp
+*/
+static heap *create_heap(int N, int (*cmp)(const void *, const void *))
 {
 	heap *h = malloc(sizeof(heap));
 
@@ -58,15 +106,7 @@ heap *create_heap(int N, int (*cmp)(const void *, const void *))
 	return h;
 }
 
-void destroy_heap(heap *h)
-{
-	if (h)
-		free(h->arr);
-
-	free(h);
-}
-
-int is_heap_empty(heap *h)
+static int is_heap_empty(heap *h)
 {
 	return (h && h->size == 0);
 }
@@ -94,13 +134,13 @@ static void _min_heapify_aux(heap *h, int i)
 	}
 }
 
-void min_heapify(heap *h)
+static void min_heapify(heap *h)
 {
 	if (h)
 		_min_heapify_aux(h, 0);
 }
 
-void heap_update(heap *h)
+static void heap_update(heap *h)
 {
 	int i;
 	for(i = h->size/2; i >= 0; i--)
@@ -115,7 +155,7 @@ void *heap_min(heap *h)
 	return NULL;
 }
 
-void *heap_extract_min(heap *h)
+static void *heap_extract_min(heap *h)
 {
 	if (h && !is_heap_empty(h))
 	{
@@ -129,7 +169,7 @@ void *heap_extract_min(heap *h)
 	return NULL;
 }
 
-int heap_insert(heap *h, void *key)
+static int heap_insert(heap *h, void *key)
 {
 	if (h && h->size < h->max_size)
 	{
@@ -151,12 +191,12 @@ int heap_insert(heap *h, void *key)
 	return 0;
 }
 
-sllist *sll_init()
+static sllist *sll_init()
 {
 	return NULL;
 }
 
-void sll_insert_first(sllist **l, int a)
+static void sll_insert_first(sllist **l, int a)
 {
 	sllist *node = malloc(sizeof(sllist));
 
@@ -192,7 +232,7 @@ sllist *sll_remove_first(sllist **l)
 	return node;
 }
 
-sllist *sll_remove_last(sllist **l)
+static sllist *sll_remove_last(sllist **l)
 {
 	sllist *node = *l;
 
@@ -210,7 +250,7 @@ sllist *sll_remove_last(sllist **l)
 	return node;
 }
 
-int *create_dj_set(int N)
+static int *create_dj_set(int N)
 {
 	int *set = malloc(sizeof(int)*N);
 
@@ -224,7 +264,7 @@ int *create_dj_set(int N)
 	return set;
 }
 
-int dj_set(int set[], int s1)
+static int dj_set(int set[], int s1)
 {
 	if (set[s1] == s1)
 		return s1;
@@ -232,7 +272,7 @@ int dj_set(int set[], int s1)
 		return set[s1] = dj_set(set, set[s1]);
 }
 
-void dj_union(int set[], int s1, int s2)
+static void dj_union(int set[], int s1, int s2)
 {
 	set[dj_set(set, s1)] = dj_set(set, s2);
 }
@@ -435,19 +475,6 @@ void dfs(graph *g, int s)
 
 		free(visited);
 	}
-}
-
-static int cmp_edges(const void *arg1, const void *arg2)
-{
-	const edge *a = (const edge *)arg1;
-	const edge *b = (const edge *)arg2;
-
-	if (a->w > b->w)
-		return 1;
-	if (a->w < b->w)
-		return -1;
-
-	return 0;
 }
 
 double kruskal(graph *g, graph **out)
