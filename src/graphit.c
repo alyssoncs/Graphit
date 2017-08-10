@@ -357,7 +357,7 @@ void add_edge(graph *g, int a, int b, double w)
 	{
 		g->adj[a][b] = 1;
 		g->E++;
-		if (g->weight)
+		if (is_weighted_graph(g))
 			g->weight[a][b] = w;
 	}
 }
@@ -384,7 +384,7 @@ void bfs(graph *g, int s)
 				i = node->key;
 				for (j = 0; j < g->V; j++)
 				{
-					if (g->adj[i][j] && !visited[j])
+					if (is_edge(g, i, j) && !visited[j])
 					{
 						visited[j] = 1;
 						distance[j] = distance[i] + 1;
@@ -404,7 +404,7 @@ static void _dfs_visit(graph *g, int s, int visited[])
 	visited[s] = 1;
 	int i;
 	for (i = 0; i < g->V; i++)
-		if (g->adj[s][i] && !visited[i])
+		if (is_edge(g, s, i) && !visited[i])
 			_dfs_visit(g, i, visited);
 }
 
@@ -457,7 +457,7 @@ double kruskal(graph *g, graph **out)
 			return sum;
 	}
 
-	if (g && g->weight)
+	if (is_weighted_graph(g))
 	{
 		edge *A 	= malloc(sizeof(edge) * g->E);
 		int *set 	= create_dj_set(g->E);
@@ -468,7 +468,7 @@ double kruskal(graph *g, graph **out)
 			{
 				for (j = 0; j < g->V; j++)
 				{
-					if (g->adj[i][j])
+					if (is_edge(g, i, j))
 					{
 						A[count].u = i;
 						A[count].v = j;
@@ -510,13 +510,13 @@ double prim(graph *g, graph **out)
 {
 	double sum = 0.0;
 
-	if (g && g->weight)
+	if (is_weighted_graph(g))
 	{
 		vertex **vertices 	= malloc(sizeof(vertex *) * g->V);
-		int  *parent		= malloc(sizeof(int) * g->V);
-		double  *cost		= malloc(sizeof(double) * g->V);
-		int     *visited	= calloc(g->V, sizeof(int));
-		heap    *pq		= create_heap(g->V, cmp_vertex);
+		int *parent		= malloc(sizeof(int) * g->V);
+		double *cost		= malloc(sizeof(double) * g->V);
+		int *visited 		= calloc(g->V, sizeof(int));
+		heap *pq		= create_heap(g->V, cmp_vertex);
 
 		if (visited && pq && cost && parent && vertices)
 		{
@@ -558,7 +558,7 @@ double prim(graph *g, graph **out)
 				int v;
 				for (v = 0; v < g->V; v++)
 				{
-					if (g->adj[u][v] && g->weight[u][v] <
+					if (is_edge(g, u, v) && g->weight[u][v] <
 						cost[v] && !visited[v])
 					{
 						cost[v] = g->weight[u][v];
@@ -602,7 +602,7 @@ double *dijkstra(graph *g, int node)
 {
 	double *cost = malloc(sizeof(double) * g->V);
 
-	if (g && g->weight)
+	if (is_weighted_graph(g))
 	{
 		int *visited 		= calloc(g->V, sizeof(int));
 		heap *pq 		= create_heap(g->V, cmp_vertex);
@@ -630,7 +630,7 @@ double *dijkstra(graph *g, int node)
 				for (v = 0; v < g->V; v++)
 				{
 					double w = g->weight[u][v];
-					if (g->adj[u][v] && cost[u]+w < cost[v])
+					if (is_edge(g, u, v) && cost[u]+w < cost[v])
 					{
 						cost[v] = cost[u] + w;
 						w_vertex = create_vertex(v, cost[v]);
