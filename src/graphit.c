@@ -58,7 +58,7 @@ void destroy_heap(heap *h)
 	free(h);
 }
 
-int heap_is_empty(heap *h)
+int is_heap_empty(heap *h)
 {
 	return (h && h->size == 0);
 }
@@ -109,7 +109,7 @@ void *heap_min(heap *h)
 
 void *heap_extract_min(heap *h)
 {
-	if (h && !heap_is_empty(h))
+	if (h && !is_heap_empty(h))
 	{
 		void *min = h->arr[0];
 		h->arr[0] = h->arr[h->size - 1];
@@ -522,7 +522,7 @@ double prim(graph *g, graph **out)
 				vertices[i] = create_vertex(i, cost[i]);
 				if (!vertices[i])
 				{
-					while (!heap_is_empty(pq))
+					while (!is_heap_empty(pq))
 					{
 						vertex *v;
 						v = heap_extract_min(pq);
@@ -538,7 +538,7 @@ double prim(graph *g, graph **out)
 				}
 				heap_insert(pq, vertices[i]);
 			}
-			while (!heap_is_empty(pq))
+			while (!is_heap_empty(pq))
 			{
 				vertex *w_vertex;
 				w_vertex = (vertex *)heap_extract_min(pq);
@@ -608,7 +608,7 @@ double *dijkstra(graph *g, int node)
 			cost[node] = 0.0;
 
 			heap_insert(pq, (void *)w_vertex);
-			while (!heap_is_empty(pq))
+			while (!is_heap_empty(pq))
 			{
 				w_vertex = (vertex *)heap_extract_min(pq);
 				int u = w_vertex->u;
@@ -630,7 +630,7 @@ double *dijkstra(graph *g, int node)
 							heap_insert(pq, (void *)w_vertex);
 						else
 						{
-							while (!heap_is_empty(pq))
+							while (!is_heap_empty(pq))
 							{
 								w_vertex = heap_extract_min(pq);
 								destroy_vertex(w_vertex);
