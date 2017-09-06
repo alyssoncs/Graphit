@@ -345,8 +345,14 @@ graph *create_weighted_graph(int V)
 
 			for (i = 0; i < V; i++)
 			{
-				g->weight[i] = calloc(V, sizeof(double));
-				if (!g->weight[i])
+				g->weight[i] = malloc(sizeof(double)*V);
+				if (g->weight[i])
+				{
+					int j;
+					for (j = 0; j < V; j++)
+						g->weight[i][j] = 0.0;
+				}
+				else
 				{
 					destroy_graph(g);
 					g = NULL;
