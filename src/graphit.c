@@ -56,10 +56,9 @@ static vertex *create_vertex(int u, double w)
 	{
 		v->u = u;
 		v->w = w;
-		return v;
 	}
 
-	return NULL;
+	return v;
 }
 
 static void destroy_vertex(vertex *v)
@@ -204,7 +203,7 @@ static int heap_insert(heap *h, void *key)
 	return 0;
 }
 
-static sllist *sll_init()
+static sllist *sll_init(void)
 {
 	return NULL;
 }
@@ -221,7 +220,8 @@ static void sll_insert_first(sllist **l, int a)
 	}
 }
 
-void sll_insert_last(sllist **l, int a)
+/*
+static void sll_insert_last(sllist **l, int a)
 {
 	sllist *node = malloc(sizeof(sllist));
 
@@ -235,7 +235,7 @@ void sll_insert_last(sllist **l, int a)
 	}
 }
 
-sllist *sll_remove_first(sllist **l)
+static sllist *sll_remove_first(sllist **l)
 {
 	sllist *node = *l;
 
@@ -244,6 +244,7 @@ sllist *sll_remove_first(sllist **l)
 
 	return node;
 }
+*/
 
 static sllist *sll_remove_last(sllist **l)
 {
