@@ -154,8 +154,7 @@ static void min_heapify(heap *h)
  */
 static void heap_update(heap *h)
 {
-	int i;
-	for(i = h->size/2; i >= 0; i--)
+	for(int i = h->size/2; i >= 0; i--)
 		_min_heapify_aux(h, i);
 }
 
@@ -270,8 +269,7 @@ static int *create_dj_set(int N)
 
 	if (set)
 	{
-		int i;
-		for (i = 0; i < N; i++)
+		for (int i = 0; i < N; i++)
 			set[i] = i;
 	}
 
@@ -306,11 +304,10 @@ graph *create_graph(int V)
 		g->adj = malloc(sizeof(char *) * V);
 		if (g->adj)
 		{
-			int i;
-			for (i = 0; i < V; i++)
+			for (int i = 0; i < V; i++)
 				g->adj[i] = NULL;
 
-			for (i = 0; i < V; i++)
+			for (int i = 0; i < V; i++)
 			{
 				g->adj[i] = calloc(V, sizeof(char));
 				if (!g->adj[i])
@@ -340,17 +337,15 @@ graph *create_weighted_graph(int V)
 		g->weight = malloc(sizeof(double *) * V);
 		if (g->weight)
 		{
-			int i;
-			for (i = 0; i < V; i++)
+			for (int i = 0; i < V; i++)
 				g->weight[i] = NULL;
 
-			for (i = 0; i < V; i++)
+			for (int i = 0; i < V; i++)
 			{
 				g->weight[i] = malloc(sizeof(double)*V);
 				if (g->weight[i])
 				{
-					int j;
-					for (j = 0; j < V; j++)
+					for (int j = 0; j < V; j++)
 						g->weight[i][j] = 0.0;
 				}
 				else
@@ -442,14 +437,12 @@ void destroy_graph(graph *g)
 	{
 		if (g->adj)
 		{
-			int i;
-			for (i = 0; i < g->V; i++)
+			for (int i = 0; i < g->V; i++)
 				free(g->adj[i]);
 		}
 		if (g->weight)
 		{
-			int i;
-			for (i = 0; i < g->V; i++)
+			for (int i = 0; i < g->V; i++)
 				free(g->weight[i]);
 		}
 		free(g->adj);
@@ -469,7 +462,6 @@ void bfs(graph *g, int s)
 
 		if (visited && distance)
 		{
-			int i, j;
 			visited[s] = 1;
 			distance[s] = 0;
 
@@ -478,8 +470,8 @@ void bfs(graph *g, int s)
 			sllist *node;
 			while ((node = sll_remove_last(&queue)))
 			{
-				i = node->key;
-				for (j = 0; j < g->V; j++)
+				int i = node->key;
+				for (int j = 0; j < g->V; j++)
 				{
 					if (is_edge(g, i, j) && !visited[j])
 					{
@@ -499,8 +491,8 @@ void bfs(graph *g, int s)
 static void _dfs_visit(graph *g, int s, int visited[])
 {
 	visited[s] = 1;
-	int i;
-	for (i = 0; i < g->V; i++)
+
+	for (int i = 0; i < g->V; i++)
 		if (is_edge(g, s, i) && !visited[i])
 			_dfs_visit(g, i, visited);
 }
@@ -524,7 +516,6 @@ void dfs(graph *g, int s)
  */
 double kruskal(graph *g, graph **out)
 {
-	int i, j;
 	double sum = 0;
 
 	if (out)
@@ -541,9 +532,9 @@ double kruskal(graph *g, graph **out)
 		if (A && set)
 		{
 			int count = 0;
-			for (i = 0; i < g->V; i++)
+			for (int i = 0; i < g->V; i++)
 			{
-				for (j = 0; j < g->V; j++)
+				for (int j = 0; j < g->V; j++)
 				{
 					if (is_edge(g, i, j))
 					{
@@ -557,7 +548,7 @@ double kruskal(graph *g, graph **out)
 
 			qsort(A, g->E, sizeof(edge), cmp_edges);
 
-			for (i = 0; i < g->E; i++)
+			for (int i = 0; i < g->E; i++)
 			{
 				int u = A[i].u;
 				int v = A[i].v;
@@ -600,12 +591,11 @@ double prim(graph *g, graph **out)
 
 		if (visited && pq && cost && parent && vertices)
 		{
-			int i;
-			for (i = 1; i < g->V; i++)
+			for (int i = 1; i < g->V; i++)
 				cost[i] = INFINITY;
 			cost[0] = 0.0;
 
-			for (i = 0; i < g->V; i++)
+			for (int i = 0; i < g->V; i++)
 			{
 				vertices[i] = create_vertex(i, cost[i]);
 				if (!vertices[i])
@@ -635,8 +625,7 @@ double prim(graph *g, graph **out)
 
 				visited[u] = 1;
 
-				int v;
-				for (v = 0; v < g->V; v++)
+				for (int v = 0; v < g->V; v++)
 				{
 					if (is_edge(g, u, v) && edge_weight(g, u, v) <
 						cost[v] && !visited[v])
@@ -651,15 +640,15 @@ double prim(graph *g, graph **out)
 
 			}
 
-			for (i = 1; i < g->V; i++)
+			for (int i = 1; i < g->V; i++)
 				sum += cost[i];
 			if (out)
 			{
 				*out = create_weighted_graph(g->V);
 				if (*out)
 				{
-					int u, v;
-					for (u = 1; u < g->V; u++)
+					int v;
+					for (int u = 1; u < g->V; u++)
 					{
 						v = parent[u];
 						add_edge(*out, u, v, cost[v]);
@@ -694,8 +683,7 @@ double *dijkstra(graph *g, int node)
 
 		if (cost && visited && pq && w_vertex)
 		{
-			int i;
-			for (i = 0; i < g->V; i++)
+			for (int i = 0; i < g->V; i++)
 				cost[i] = INFINITY;
 			cost[node] = 0.0;
 
@@ -710,8 +698,7 @@ double *dijkstra(graph *g, int node)
 					continue;
 				visited[u] = 1;
 
-				int v;
-				for (v = 0; v < g->V; v++)
+				for (int v = 0; v < g->V; v++)
 				{
 					double w = edge_weight(g, u, v);
 					if (is_edge(g, u, v) && cost[u]+w < cost[v])
