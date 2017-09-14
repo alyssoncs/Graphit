@@ -452,6 +452,7 @@ void destroy_graph(graph *g)
 }
 
 
+/*
 void bfs(graph *g, int s)
 {
 	if (g && g->V > s)
@@ -508,6 +509,8 @@ void dfs(graph *g, int s)
 		free(visited);
 	}
 }
+*/
+
 
 /*
  * returns the weight of the minimum-spanning-tree using kruskal's algorithm,

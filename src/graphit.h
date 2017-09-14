@@ -48,8 +48,10 @@ int is_edge(graph *g, int u, int v);
 double edge_weight(graph *g, int u, int v);
 void add_edge(graph *g, int a, int b, double w);
 void destroy_graph(graph *g);
+/*
 void bfs(graph *g, int s);
 void dfs(graph *g, int s);
+*/
 double kruskal(graph *g, graph **out);
 double prim(graph *g, graph **out);
 double *dijkstra(graph *g, int node);
