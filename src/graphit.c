@@ -6,18 +6,43 @@
 #define heap_right(i) 	((2*(i))+2)
 #define heap_left(i) 	((2*(i))+1)
 
+/*
+ * Struct representing an weighted edge
+ *
+ * @u 			First vertex of the edge
+ * @v 			Second vertex of the edge
+ * @w 			The weight of the edge
+ */
 typedef struct
 {
-	int u, v;
+	int u;
+	int v;
 	double w;
 } edge;
 
+/*
+ * Struct representing a single vertex with an associated
+ * weight, used in Prim's and Dijkstra's algorithms
+ * 
+ * @u 			The vertex
+ * @w 			The weight
+ */
 typedef struct
 {
 	int u;
 	double w;
 } vertex;
 
+/* 
+ * Struct for the heap data structure
+ *
+ * @size 		The current size of the heap
+ * @max_size 		The maximum number of elements the heap holds
+ * @arr 		The array that will hold the elements
+ * @cmp 		A pointer to the  comparison function of the heap.
+ * 			The function must return a non-zero if the fist
+ * 			argument is less than the second argument
+ */
 typedef struct
 {
 	int size;
@@ -26,14 +51,21 @@ typedef struct
 	int (*cmp)(const void *, const void *);
 } heap;
 
+/*
+ * Struct for the singly linked list data structure
+ *
+ * @key 		An integer key
+ * @next 		A pointer to the next node of the list
+ */
 typedef struct _sllist
 {
 	int key;
 	struct _sllist *next;
 } sllist;
 
+
 /*
- * used to sort an array of edges with qsort()
+ * Used to sort an array of edges with qsort()
  */
 static int cmp_edges(const void *arg1, const void *arg2)
 {
@@ -67,7 +99,7 @@ static void destroy_vertex(vertex *v)
 }
 
 /*
- * used to compare vertices saved in a heap structure
+ * Used to compare vertices saved in a heap structure.
  */
 static int cmp_vertex(const void *arg1, const void *arg2)
 {
@@ -87,8 +119,12 @@ static void destroy_heap(heap *h)
 }
 
 /*
-* Creates a heap with size N
-* with comparison function cmp
+* Creates a heap with size N with comparison function cmp
+*
+* @arg N 		The size of the new heap
+* @arg cmp 		The comparison function of the heap
+*
+* @return 		The address of the new heap, or NULL if it fails
 */
 static heap *create_heap(int N, int (*cmp)(const void *, const void *))
 {
@@ -140,7 +176,9 @@ static void _min_heapify_aux(heap *h, int i)
 }
 
 /*
- * restores min heap property
+ * Restores min heap property
+ *
+ * @arg h 		A pointer to the heap to be restored
  */
 static void min_heapify(heap *h)
 {
@@ -149,8 +187,9 @@ static void min_heapify(heap *h)
 }
 
 /*
- * restores min heap property if an
- * element's key was changed
+ * Restores min heap property if an element's key was changed
+ *
+ * @arg h 		A pointer to the heap being updated
  */
 static void heap_update(heap *h)
 {
@@ -158,6 +197,14 @@ static void heap_update(heap *h)
 		_min_heapify_aux(h, i);
 }
 
+/*
+ * Returns the smallest element of a min-heap (the first one)
+ * This function will not modify the heap
+ *
+ * @arg h 		A pointer to the heap
+ *
+ * @return 		The smallest element of the heap
+ */
 void *heap_min(heap *h)
 {
 	if (h)
@@ -166,6 +213,13 @@ void *heap_min(heap *h)
 	return NULL;
 }
 
+/*
+ * Removes the smallest element of a min-heap
+ *
+ * @arg h 		A pointer to the heap
+ *
+ * @return 		The smallest element of the heap
+ */
 static void *heap_extract_min(heap *h)
 {
 	if (h && !is_heap_empty(h))
@@ -180,6 +234,14 @@ static void *heap_extract_min(heap *h)
 	return NULL;
 }
 
+/*
+ * Inserts a new element in the heap
+ *
+ * @arg h 		A pointer to the heap
+ * @arg key 		The new element 
+ *
+ * @return 		Non-zero in success, zero otherwise
+ */
 static int heap_insert(heap *h, void *key)
 {
 	if (h && h->size < h->max_size)
@@ -202,6 +264,13 @@ static int heap_insert(heap *h, void *key)
 	return 0;
 }
 
+
+/*
+ * Linked lists were being used in BFS algorithm, but I couldn't find a way to
+ * create BFS and DFS functions that would be generic enough to the end user.
+ */
+
+/*
 static sllist *sll_init(void)
 {
 	return NULL;
@@ -219,7 +288,7 @@ static void sll_insert_first(sllist **l, int a)
 	}
 }
 
-/*
+
 static void sll_insert_last(sllist **l, int a)
 {
 	sllist *node = malloc(sizeof(sllist));
@@ -243,7 +312,7 @@ static sllist *sll_remove_first(sllist **l)
 
 	return node;
 }
-*/
+
 
 static sllist *sll_remove_last(sllist **l)
 {
@@ -262,6 +331,7 @@ static sllist *sll_remove_last(sllist **l)
 
 	return node;
 }
+*/
 
 static int *create_dj_set(int N)
 {
@@ -277,7 +347,12 @@ static int *create_dj_set(int N)
 }
 
 /*
- * returns the set of element s1
+ * Returns the set of element s1 in the disjoint set
+ *
+ * @param set 		The disjoint set
+ * @param s1 		The element that the function will search
+ *
+ * @return 		An integer representing the s1's set
  */
 static int dj_set(int set[], int s1)
 {
@@ -287,6 +362,13 @@ static int dj_set(int set[], int s1)
 		return set[s1] = dj_set(set, set[s1]);
 }
 
+/*
+ * Performs a union operation of the sets containing s1 and s2
+ *
+ * @param set 		The disjoint set
+ * @param s1 		An element of the first set
+ * @param s2 		An element of the second set
+ */
 static void dj_union(int set[], int s1, int s2)
 {
 	set[dj_set(set, s1)] = dj_set(set, s2);
@@ -417,17 +499,17 @@ double edge_weight(graph *g, int u, int v)
 }
 
 /*
- * adds an edge between vertices a and b
+ * adds an edge between vertices u and v
  * if g is a weighted graph, adds a weight w to this new edge
  */
-void add_edge(graph *g, int a, int b, double w)
+void add_edge(graph *g, int u, int v, double w)
 {
 	if (g)
 	{
-		g->adj[a][b] = 1;
+		g->adj[u][v] = 1;
 		g->E++;
 		if (is_weighted_graph(g))
-			g->weight[a][b] = w;
+			g->weight[u][v] = w;
 	}
 }
 
