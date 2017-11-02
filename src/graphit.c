@@ -513,6 +513,15 @@ void add_edge(graph *g, int u, int v, double w)
 	}
 }
 
+/*
+ * Remove the (u, v) edge in the graph g 
+ */
+void remove_edge(graph *g, int u, int v)
+{
+	if (g)
+		g->adj[u][v] = 0;
+}
+
 void destroy_graph(graph *g)
 {
 	if (g)

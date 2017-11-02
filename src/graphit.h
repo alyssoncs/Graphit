@@ -83,7 +83,8 @@ int is_edge(graph *g, int u, int v);
  */
 double edge_weight(graph *g, int u, int v);
 
-/* Adds an edge between the vertices u and v with weight w in the graph g,
+/*
+ * Adds an edge between the vertices u and v with weight w in the graph g,
  * all vertices are zero-based integers.
  * If g is a unweighted graph, the weight w will be ignored
  *
@@ -94,6 +95,16 @@ double edge_weight(graph *g, int u, int v);
  * 			it will be ignored if the g is an unweighted graph
  */
 void add_edge(graph *g, int u, int v, double w);
+
+/*
+ * Remove the edge between vertices u and v in the graph g,
+ * it will work whether the edge exists or not
+ *
+ * @param g 		A pointer to a weighted or unweighted graph
+ * @param u 		An integer representing the vertex u in the (u, v) edge
+ * @param v 		An integer representing the vertex v in the (u, v) edge
+ */
+void remove_edge(graph *g, int u, int v);
 
 /*
  * Destroys an instance of a graph (weighted or unweighted)
