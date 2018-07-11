@@ -1,5 +1,5 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+#ifndef GRAPHIT_H
+#define GRAPHIT_H
 
 /*
  * The structure that defines a directed, weighted or unweighted, graph
